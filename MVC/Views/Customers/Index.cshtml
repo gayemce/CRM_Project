@@ -1,0 +1,624 @@
+﻿@* @using Domain;
+@model List<Customer>?
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müşteri Yönetimi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+        rel="stylesheet">
+    <style>
+        .main-content {
+            margin-right: 100px;
+            padding: 0;
+        }
+
+        .table td,
+        .table th {
+            border-right: 1px solid #dee2e6;
+        }
+
+        .table td:last-child,
+        .table th:last-child {
+            border-right: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5 main-content">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Müşteri Yönetimi</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button type="button" class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal"
+                            data-bs-target="#addCustomerModal">
+                            <i class="bi bi-plus-lg"></i> Yeni Müşteri Ekle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addCustomerModalLabel">Yeni Müşteri Ekle</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-controller="Customers" asp-action="CreateCustomer" method="post"
+                                    autocomplete="off" id="addCustomerForm">
+                                    <div class="mb-3">
+                                        <label for="nameInput" class="form-label">Ad Soyad</label>
+                                        <input type="text" class="form-control" id="nameInput" name="name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="emailInput" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="emailInput" name="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phoneInput" class="form-label">Telefon</label>
+                                        <input type="tel" class="form-control" id="phoneInput" name="phone" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="addressInput" class="form-label">Adres</label>
+                                        <input type="text" class="form-control" id="addressInput" name="address"
+                                            required>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Kapat</button>
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="input-group mb-3">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Müşteri Ara"
+                        aria-label="Müşteri Ara">
+                    <button class="btn btn-outline-secondary" type="button" onclick="searchCustomers()">Ara</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="customersTable" class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col">Ad Soyad</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Telefon</th>
+                                <th scope="col">Aksiyonlar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var customer in Model)
+                                {
+                                    <tr>
+                                        <td>@customer.Name</td>
+                                        <td>@customer.Email</td>
+                                        <td>@customer.Phone</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-info"
+                                                onclick="openEditModal(@Json.Serialize(customer))">
+                                                <i class="bi bi-pencil"></i> Düzenle
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                onclick="deleteCustomer('@customer.Id')">
+                                                <i class="bi bi-trash"></i> Sil
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">Müşteri bulunamadı.</td>
+                                </tr>
+                            }
+
+                            <!-- Edit Customer Modal -->
+                            <div class="modal fade" id="editCustomerModal" tabindex="-1"
+                                aria-labelledby="editCustomerModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editCustomerModalLabel">Müşteri Düzenle</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="editCustomerForm">
+                                                <div class="mb-3">
+                                                    <label for="editNameInput" class="form-label">Ad Soyad</label>
+                                                    <input type="text" class="form-control" id="editNameInput"
+                                                        name="name" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="editEmailInput" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" id="editEmailInput"
+                                                        name="email" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="editPhoneInput" class="form-label">Telefon</label>
+                                                    <input type="tel" class="form-control" id="editPhoneInput"
+                                                        name="phone" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="editAddressInput" class="form-label">Adres</label>
+                                                    <input type="text" class="form-control" id="editAddressInput"
+                                                        name="address" required>
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Kapat</button>
+                                            <button type="button" class="btn btn-primary"
+                                                onclick="updateCustomer()">Güncelle</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script>
+            async function searchCustomers() {
+                const name = document.getElementById('searchInput').value;
+                const pageSize = 10;
+                const pageNumber = 1;
+
+                const response = await fetch(`/Customers/ListCustomers?name=${name}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
+                if (response.ok) {
+                    const customers = await response.json();
+                    displayCustomers(customers);
+                } else {
+                    console.error('Arama işlemi başarısız:', response.statusText);
+                }
+            }
+
+            function displayCustomers(customers) {
+                const tbody = document.getElementById('customersTable').getElementsByTagName('tbody')[0];
+                tbody.innerHTML = '';
+
+                customers.forEach(customer => {
+                    const row = tbody.insertRow();
+                    const cell1 = row.insertCell(0);
+                    const cell2 = row.insertCell(1);
+                    const cell3 = row.insertCell(2);
+
+                    cell1.textContent = customer.name;
+                    cell2.textContent = customer.email;
+                    cell3.textContent = customer.phone;
+                });
+            }
+
+            @* async function submitForm() {
+            const form = document.getElementById('addCustomerForm');
+            const formData = new FormData(form);
+
+            const response = await fetch('/Customers/CreateCustomer', {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            address: formData.get('address')
+            })
+            });
+
+            if (response.ok) {
+            const customer = await response.json();
+            alert('Müşteri başarıyla eklendi!');
+            $('#addCustomerModal').modal('hide');
+
+            displayCustomers([customer]);
+            } else {
+            console.error('Müşteri ekleme başarısız:', response.statusText);
+            alert('Müşteri eklenirken bir hata oluştu.');
+            }
+            } 
+
+                let currentCustomerId = null;
+
+            function openEditModal(customer) {
+                $('#editNameInput').val(customer.name);
+                $('#editEmailInput').val(customer.email);
+                $('#editPhoneInput').val(customer.phone);
+                $('#editAddressInput').val(customer.address);
+                $('#editCustomerModal').modal('show');
+            }
+
+            async function updateCustomer() {
+                const formData = {
+                    name: $('#editNameInput').val(),
+                    email: $('#editEmailInput').val(),
+                    phone: $('#editPhoneInput').val(),
+                    address: $('#editAddressInput').val(),
+                };
+
+                const response = await fetch(`/Customers/UpdateCustomer/${formData.customerId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        address: formData.address
+                    })
+                });
+
+                if (response.ok) {
+                    $('#editCustomerModal').modal('hide');
+                    alert('Müşteri başarıyla güncellendi!');
+
+                    displayCustomers([customer]);
+                } else {
+                    console.error('Müşteri güncelleme başarısız:', response.statusText);
+                    alert('Müşteri güncellenirken bir hata oluştu.');
+                }
+            }
+
+            async function deleteCustomer(customerId) {
+                if (confirm('Müşteriyi silmek istediğinizden emin misiniz?')) {
+                    try {
+                        const response = await fetch(`/Customers/DeleteCustomer/${customerId}`, {
+                            method: 'DELETE'
+                        });
+
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            console.error('Silme işlemi başarısız:', response.statusText);
+                            alert('Müşteri silme işlemi başarısız oldu.');
+                        }
+                    } catch (error) {
+                        console.error('Silme işlemi hatası:', error);
+                        alert('Müşteri silme işlemi sırasında bir hata oluştu.');
+                    }
+                }
+            }
+        </script>
+    }
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html> *@
+
+@using Domain;
+@model List<Customer>?
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müşteri Yönetimi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+        rel="stylesheet">
+    <style>
+        .main-content {
+            margin-right: 100px;
+            padding: 0;
+        }
+
+        .table td,
+        .table th {
+            border-right: 1px solid #dee2e6;
+        }
+
+        .table td:last-child,
+        .table th:last-child {
+            border-right: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5 main-content">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Müşteri Yönetimi</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button type="button" class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal"
+                            data-bs-target="#addCustomerModal">
+                            <i class="bi bi-plus-lg"></i> Yeni Müşteri Ekle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addCustomerModalLabel">Yeni Müşteri Ekle</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-controller="Customers" asp-action="CreateCustomer" method="post"
+                                    autocomplete="off" id="addCustomerForm">
+                                    <div class="mb-3">
+                                        <label for="nameInput" class="form-label">Ad Soyad</label>
+                                        <input type="text" class="form-control" id="nameInput" name="Name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="emailInput" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="emailInput" name="Email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phoneInput" class="form-label">Telefon</label>
+                                        <input type="tel" class="form-control" id="phoneInput" name="Phone" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="addressInput" class="form-label">Adres</label>
+                                        <input type="text" class="form-control" id="addressInput" name="Address"
+                                            required>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Kapat</button>
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Müşteri Ara"
+                        aria-label="Müşteri Ara">
+                    <button class="btn btn-outline-secondary" type="button" onclick="searchCustomers()">Ara</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="customersTable" class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col">Ad Soyad</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Telefon</th>
+                                <th scope="col">Aksiyonlar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var customer in Model)
+                                {
+                                    <tr>
+                                        <td>@customer.Name</td>
+                                        <td>@customer.Email</td>
+                                        <td>@customer.Phone</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-info"
+                                                onclick="openEditModal(@Json.Serialize(customer))">
+                                                <i class="bi bi-pencil"></i> Düzenle
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                onclick="deleteCustomer('@customer.Id')">
+                                                <i class="bi bi-trash"></i> Sil
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">Müşteri bulunamadı.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Edit Customer Modal -->
+                <div class="modal fade" id="editCustomerModal" tabindex="-1"
+                    aria-labelledby="editCustomerModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editCustomerModalLabel">Müşteri Düzenle</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-controller="Customers" asp-action="UpdateCustomer" method="post"
+                                    autocomplete="off" id="editCustomerForm">
+                                    <div class="mb-3">
+                                        <label for="editNameInput" class="form-label">Ad Soyad</label>
+                                        <input type="text" class="form-control" id="editNameInput" name="name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editEmailInput" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="editEmailInput" name="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editPhoneInput" class="form-label">Telefon</label>
+                                        <input type="tel" class="form-control" id="editPhoneInput" name="phone" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editAddressInput" class="form-label">Adres</label>
+                                        <input type="text" class="form-control" id="editAddressInput" name="address" required>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                        <button type="submit" class="btn btn-primary">Güncelle</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script>
+            async function searchCustomers() {
+                const name = document.getElementById('searchInput').value;
+                const pageSize = 10;
+                const pageNumber = 1;
+
+                const response = await fetch(`/Customers/ListCustomers?name=${name}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
+                if (response.ok) {
+                    const customers = await response.json();
+                    displayCustomers(customers);
+                } else {
+                    console.error('Arama işlemi başarısız:', response.statusText);
+                }
+            }
+
+            function displayCustomers(customers) {
+                const tbody = document.getElementById('customersTable').getElementsByTagName('tbody')[0];
+                tbody.innerHTML = '';
+
+                customers.forEach(customer => {
+                    const row = tbody.insertRow();
+                    const cell1 = row.insertCell(0);
+                    const cell2 = row.insertCell(1);
+                    const cell3 = row.insertCell(2);
+
+                    cell1.textContent = customer.name;
+                    cell2.textContent = customer.email;
+                    cell3.textContent = customer.phone;
+                });
+            }
+
+            @* async function submitForm() {
+            const form = document.getElementById('addCustomerForm');
+            const formData = new FormData(form);
+
+            const response = await fetch('/Customers/CreateCustomer', {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            address: formData.get('address')
+            })
+            });
+
+            if (response.ok) {
+            const customer = await response.json();
+            alert('Müşteri başarıyla eklendi!');
+            $('#addCustomerModal').modal('hide');
+
+            displayCustomers([customer]);
+            } else {
+            console.error('Müşteri ekleme başarısız:', response.statusText);
+            alert('Müşteri eklenirken bir hata oluştu.');
+            }
+            } *@
+
+                let currentCustomerId = null;
+
+            function openEditModal(customer) {
+                $('#editNameInput').val(customer.name);
+                $('#editEmailInput').val(customer.email);
+                $('#editPhoneInput').val(customer.phone);
+                $('#editAddressInput').val(customer.address);
+                $('#editCustomerModal').modal('show');
+            }
+
+            async function updateCustomer() {
+                const formData = {
+                    name: $('#editNameInput').val(),
+                    email: $('#editEmailInput').val(),
+                    phone: $('#editPhoneInput').val(),
+                    address: $('#editAddressInput').val(),
+                };
+
+                const response = await fetch(`/Customers/UpdateCustomer/${formData.customerId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        address: formData.address
+                    })
+                });
+
+                if (response.ok) {
+                    $('#editCustomerModal').modal('hide');
+                    alert('Müşteri başarıyla güncellendi!');
+
+                    displayCustomers([customer]);
+                } else {
+                    console.error('Müşteri güncelleme başarısız:', response.statusText);
+                    alert('Müşteri güncellenirken bir hata oluştu.');
+                }
+            }
+
+            async function deleteCustomer(customerId) {
+                if (confirm('Müşteriyi silmek istediğinizden emin misiniz?')) {
+                    try {
+                        const response = await fetch(`/Customers/DeleteCustomer/${customerId}`, {
+                            method: 'DELETE'
+                        });
+
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            console.error('Silme işlemi başarısız:', response.statusText);
+                            alert('Müşteri silme işlemi başarısız oldu.');
+                        }
+                    } catch (error) {
+                        console.error('Silme işlemi hatası:', error);
+                        alert('Müşteri silme işlemi sırasında bir hata oluştu.');
+                    }
+                }
+            }
+        </script>
+    }
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
+

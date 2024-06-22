@@ -1,0 +1,142 @@
+﻿@{
+    HttpContextAccessor httpContextAccessor = new();
+    bool isAuthenticated = httpContextAccessor.HttpContext!.User.Claims.Any();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyCRM</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MVC.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            height: 100%;
+            background-color: #f8f9fa;
+            margin-left: 100px;
+            padding-top: 115px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .sidebar a:hover {
+            background-color: #264a66;
+            color: white;
+        }
+
+        .content {
+            margin-left: 240px;
+            padding: 20px 20px 50px 20px;
+            width: calc(100% - 240px);
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    @if (isAuthenticated)
+    {
+        <div class="sidebar">
+            <a asp-area="" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-house-door"></i> Ana Sayfa
+            </a>
+            <a asp-area="" asp-controller="customers" asp-action="Index">
+                <i class="bi bi-people"></i> Müşteri Yönetimi
+            </a>
+            <a href="#"><i class="bi bi-cart"></i> Satış Yönetimi</a>
+            <a href="#"><i class="bi bi-bar-chart"></i> Raporlar</a>
+            <a href="#"><i class="bi bi-calendar"></i> Görev ve Takvim Yönetimi</a>
+            <a href="#"><i class="bi bi-megaphone"></i>Pazarlama Kampanyaları</a>
+            <a href="#"><i class="bi bi-life-preserver"></i> Destek ve Bilet Sistemi</a>
+            <a href="#"><i class="bi bi-box"></i> Ürün Yönetimi</a>
+            <a href="#"><i class="bi bi-file-earmark-text"></i> Teklif ve Fatura Yönetimi</a>
+            <a href="#"><i class="bi bi-person"></i> Kullanıcı ve Rol Yönetimi</a>
+        </div>
+    }
+
+    <div class="content">
+        <header>
+            <nav style="margin-left: 100px;"
+                class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">My CRM</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        @if (isAuthenticated)
+                        {
+                            <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="customers"
+                                        asp-action="Index">Müşteriler</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Auth"
+                                        asp-action="Login">Satışlar</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home"
+                                        asp-action="Privacy">Raporlar</a>
+                                </li>
+                            </ul>
+                        }
+                    </div>
+                </div>
+                <div class="d-flex">
+                    @if (!isAuthenticated)
+                    {
+                        <a class="btn btn-outline-dark mx-1" asp-area="" asp-controller="Auth" asp-action="Login">
+                            <i class="fa-solid fa-lock">Giriş</i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-dark mx-1" asp-area="" asp-controller="Auth" asp-action="Logout">
+                            <i class="fa-solid fa-lock">Çıkış</i>
+                        </a>
+                    }
+                </div>
+            </nav>
+        </header>
+
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+        <footer class="border-top footer text-muted" style="margin-left: 100px;">
+            <div class="container-fluid">
+                &copy; 2024 - My CRM • Gaye TEKİN
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

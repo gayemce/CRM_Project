@@ -1,0 +1,135 @@
+@{
+    var error = TempData["Error"];
+
+    var userNameOrEmail = TempData["UserNameOrEmail"];
+    var password = TempData["Password"];
+  }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Proje Login ve Register</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      font-weight: bold;
+    }
+    .form-group input[type="text"], 
+    .form-group input[type="email"],
+    .form-group input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    .form-group button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+    .form-group .register-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .form-group .register-link a {
+      color: #007bff;
+    }
+    .form-group .register-link a:hover {
+      text-decoration: none;
+      color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Login Form -->
+    <form asp-controller="Auth" asp-action="Login" method="post" autocomplete="off" id="loginForm">
+      <h2 class="mb-3">Giriş Yap</h2>
+      <div class="form-group">
+        <label for="UserNameOrEmail">Kullanıcı Adı veya E-posta</label>
+        <input type="text" id="username" name="UserNameOrEmail" value="@userNameOrEmail" required>
+      </div>
+      <div class="form-group">
+        <label for="Password">Şifre</label>
+        <input type="password" id="password" name="Password" value="@password" required>
+      </div>
+      <div class="form-group">
+        <button type="submit">Giriş Yap</button>
+        <span class="text-danger">@TempData["Error"]</span>
+      </div>
+      <div class="form-group register-link">
+        Yeni misiniz? <a href="#registerForm">Hemen Kaydolun</a>
+      </div>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm" style="display:none;">
+      <h2 class="mb-3">Kaydol</h2>
+      <div class="form-group">
+        <label for="fullname">Ad Soyad</label>
+        <input type="text" id="fullname" name="fullname" required>
+      </div>
+      <div class="form-group">
+        <label for="email">E-posta</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="reg_password">Şifre</label>
+        <input type="password" id="reg_password" name="reg_password" required>
+      </div>
+      <div class="form-group">
+        <label for="confirm_password">Şifre Tekrarı</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+      </div>
+      <div class="form-group">
+        <button type="submit">Kaydol</button>
+      </div>
+      <div class="form-group register-link">
+        Zaten bir hesabınız var mı? <a href="#loginForm">Giriş Yapın</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Bootstrap JS ve jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Toggle between Login and Register forms
+    $(document).ready(function() {
+      $('.register-link a').on('click', function(e) {
+        e.preventDefault();
+        var targetForm = $(this).attr('href');
+        $('#loginForm, #registerForm').toggle();
+        $(targetForm).find('input:first').focus();
+      });
+    });
+  </script>
+</body>
+</html>
