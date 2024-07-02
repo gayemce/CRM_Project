@@ -6,6 +6,7 @@ C:\CRM_Project\CRM\Domain\obj\Debug\net7.0\Domain.GeneratedMSBuildEditorConfig.e
 C:\CRM_Project\CRM\Domain\obj\Debug\net7.0\Domain.AssemblyInfoInputs.cache
 C:\CRM_Project\CRM\Domain\obj\Debug\net7.0\Domain.AssemblyInfo.cs
 C:\CRM_Project\CRM\Domain\obj\Debug\net7.0\Domain.csproj.CoreCompileInputs.cache
+C:\CRM_Project\CRM\Domain\obj\Debug\net7.0\Domain.sourcelink.json
 C:\CRM_Project\CRM\Domain\obj\Debug\net7.0\Domain.dll
 C:\CRM_Project\CRM\Domain\obj\Debug\net7.0\refint\Domain.dll
 C:\CRM_Project\CRM\Domain\obj\Debug\net7.0\Domain.pdb

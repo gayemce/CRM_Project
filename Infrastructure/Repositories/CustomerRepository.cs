@@ -32,7 +32,7 @@ public class CustomerRepository : Repository<Customer>, ICustomerRepository
         }
 
         query = query
-            .Include(p => p.Contacts)
+            // .Include(p => p.Contacts)
             .OrderBy(p => p.Name);
 
         return query;

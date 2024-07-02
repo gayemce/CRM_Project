@@ -1,0 +1,124 @@
+@using Domain;
+@model List<Product>?;
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ürün Yönetimi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+        rel="stylesheet">
+    <style>
+        .main-content {
+            margin-right: 100px;
+            padding: 0;
+        }
+
+        .table td,
+        .table th {
+            border-right: 1px solid #dee2e6;
+        }
+
+        .table td:last-child,
+        .table th:last-child {
+            border-right: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5 main-content">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Ürün Yönetimi</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a asp-controller="Products" asp-action="Create" type="button"
+                            class="btn btn-sm btn-outline-primary me-2">
+                            <i class="bi bi-plus-lg"></i> Yeni Ürün Ekle
+                        </a>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Ürün Adı Ara"
+                        aria-label="Ürün Adı Ara" autocomplete="off">
+                    <button class="btn btn-outline-secondary" type="button" onclick="searchProducts()">Ara</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="productsTable" class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col">Ürün Adı</th>
+                                <th scope="col">Fiyat</th>
+                                <th scope="col">Adet</th>
+                                <th scope="col">Açıklama</th>
+                                <th scope="col">Aksiyonlar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var product in Model)
+                                {
+                                    <tr>
+                                        <td>@product.Name</td>
+                                        <td>@product.Price</td>
+                                        <td>@product.Quantity</td>
+                                        <td>@product.Description</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-info" href="javascript:void(0)"
+                                                onclick="updateProduct('@product.Id')">
+                                                <i class="bi bi-pencil"></i> Düzenle
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                onclick="deleteProduct('@product.Id')">
+                                                <i class="bi bi-trash"></i> Sil
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">Ürün bulunamadı.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+
+    <script>
+
+        async function searchProducts() {
+            const searchInput = document.getElementById('searchInput').value;
+            window.location.href = `/Products/Index?name=${encodeURIComponent(searchInput)}`;
+        }
+
+        async function deleteProduct(productId) {
+            const response = await fetch(`/Products/DeleteProduct?productId=${productId}`, {
+                method: 'DELETE'
+            })
+                .then(() => {
+                    document.location.reload();
+                });
+        }
+
+        async function updateProduct(productId) {
+            window.location.href = `/Products/Update?productId=${productId}`;
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

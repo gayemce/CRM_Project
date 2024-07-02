@@ -40,7 +40,6 @@ public class ProductRepository : Repository<Product>, IProductRepository
 
 public class ProductCriteria
 {
-    public Guid? CustomerId { get; set; }
     public string? Name { get; set; }
 }
 

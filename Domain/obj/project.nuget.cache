@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "LUmOcOZAAY0=",
+  "dgSpecHash": "TG73IPw/4yRVjEMAoyxN7ztnjJpw7n8mfHfxSKxWPmBgObN+oKivdNeKLd+skz9qtam/FyRxYyDULk8abyID8A==",
   "success": true,
   "projectFilePath": "C:\\CRM_Project\\CRM\\Domain\\Domain.csproj",
   "expectedPackageFiles": [
@@ -29,10 +29,7 @@
     "C:\\Users\\Win10\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
     "C:\\Users\\Win10\\.nuget\\packages\\microsoft.net.http.headers\\2.2.0\\microsoft.net.http.headers.2.2.0.nupkg.sha512",
     "C:\\Users\\Win10\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
-    "C:\\Users\\Win10\\.nuget\\packages\\system.text.encodings.web\\4.5.0\\system.text.encodings.web.4.5.0.nupkg.sha512",
-    "C:\\Users\\Win10\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.20\\microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
-    "C:\\Users\\Win10\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.20\\microsoft.windowsdesktop.app.ref.7.0.20.nupkg.sha512",
-    "C:\\Users\\Win10\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.20\\microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512"
+    "C:\\Users\\Win10\\.nuget\\packages\\system.text.encodings.web\\4.5.0\\system.text.encodings.web.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }

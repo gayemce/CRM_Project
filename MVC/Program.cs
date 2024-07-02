@@ -6,12 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(configure =>
 {
     configure.Cookie.Name = "CRM.Auth";
@@ -20,7 +17,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     //configure.Cookie.Expiration = TimeSpan.FromDays(1);
 });
 builder.Services.AddAuthorization();
-
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -33,7 +29,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 using(var scoped = app.Services.CreateScope())

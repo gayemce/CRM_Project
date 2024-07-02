@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5 main-content">
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <h5 style="text-align: center;">Yeni Ürün Ekle</h5>
+                            </div>
+                            <div>
+                                <form asp-controller="Products" asp-action="CreateProduct" method="post" autocomplete="off">
+                                    <div class="mb-3">
+                                        <label for="nameInput" class="form-label">Ürün Adı</label>
+                                        <input type="text" class="form-control" id="nameInput" name="Name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="priceInput" class="form-label">Fiyat</label>
+                                        <input type="text" class="form-control" id="priceInput" name="Price" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="quantityInput" class="form-label">Adet</label>
+                                        <input type="number" class="form-control" id="quantityInput" name="Quantity" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descriptionInput" class="form-label">Açıklama</label>
+                                        <input type="text" class="form-control" id="descriptionInput" name="Description"
+                                            required>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

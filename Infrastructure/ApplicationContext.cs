@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,12 +12,10 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser, Application
     {
         base.OnModelCreating(builder);
 
-        // tables
-
         builder.Entity<Customer>(b =>
         {
             b.Property(m => m.Id)
-                .HasDefaultValueSql("gen_random_uuid()");
+            .HasDefaultValueSql("NEWID()");
 
             b.Property(m => m.Name)
                 .HasMaxLength(128);
@@ -31,11 +30,11 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser, Application
                 .HasMaxLength(256);
 
             b.Property(m => m.CreateDate)
-                .HasDefaultValueSql("now()")
+                .HasDefaultValueSql("GETDATE()")
                 .ValueGeneratedOnAdd();
 
-            b.Property(m => m.CreateDate)
-                .HasDefaultValueSql("now()")
+            b.Property(m => m.UpdateDate)
+                .HasDefaultValueSql("GETDATE()")
                 .ValueGeneratedOnUpdate();
 
             b.HasMany(e => e.Contacts)
@@ -53,5 +52,36 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser, Application
                 .HasForeignKey("CustomerId")
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        builder.Entity<Product>(b =>
+        {
+            b.Property(m => m.Id)
+            .HasDefaultValueSql("NEWID()");
+
+            b.Property(m => m.Name)
+                .HasMaxLength(128);
+
+            b.Property(m => m.Description)
+                .HasMaxLength(256);
+
+            b.Property(m => m.CreateDate)
+                .HasDefaultValueSql("GETDATE()")
+                .ValueGeneratedOnAdd();
+
+            b.Property(m => m.UpdateDate)
+                .HasDefaultValueSql("GETDATE()")
+                .ValueGeneratedOnUpdate();
+        });
+
+        builder.Ignore<Activity>();
+        builder.Ignore<Contact>();
+        builder.Ignore<Lead>();
+        builder.Ignore<Opportunity>();
+
+        builder.Ignore<IdentityUserLogin<Guid>>();
+        builder.Ignore<IdentityRoleClaim<Guid>>();
+        builder.Ignore<IdentityUserClaim<Guid>>();
+        builder.Ignore<IdentityUserToken<Guid>>();
+        builder.Ignore<IdentityUserRole<Guid>>();
     }
 }

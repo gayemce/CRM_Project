@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5 main-content">
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <h5 style="text-align: center;">Yeni Müşteri Ekle</h5>
+                            </div>
+                            <div>
+                                <form asp-controller="Customers" asp-action="CreateCustomer" method="post" autocomplete="off">
+                                    <div class="mb-3">
+                                        <label for="nameInput" class="form-label">Ad Soyad</label>
+                                        <input type="text" class="form-control" id="nameInput" name="Name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="emailInput" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="emailInput" name="Email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phoneInput" class="form-label">Telefon</label>
+                                        <input type="tel" class="form-control" id="phoneInput" name="Phone" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="addressInput" class="form-label">Adres</label>
+                                        <input type="text" class="form-control" id="addressInput" name="Address"
+                                            required>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

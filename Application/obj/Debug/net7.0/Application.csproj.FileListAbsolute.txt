@@ -10,8 +10,9 @@ C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Application.GeneratedMSBuildEdit
 C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Application.AssemblyInfoInputs.cache
 C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Application.AssemblyInfo.cs
 C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Application.csproj.CoreCompileInputs.cache
+C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Application.sourcelink.json
+C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Application.csproj.CopyComplete
 C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Application.dll
 C:\CRM_Project\CRM\Application\obj\Debug\net7.0\refint\Application.dll
 C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Application.pdb
 C:\CRM_Project\CRM\Application\obj\Debug\net7.0\ref\Application.dll
-C:\CRM_Project\CRM\Application\obj\Debug\net7.0\Applicat.44B5EDA2.Up2Date

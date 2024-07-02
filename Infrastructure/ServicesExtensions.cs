@@ -10,7 +10,7 @@ public static class ServicesExtensions
     {
         services.AddDbContext<ApplicationContext>(opt =>
         {
-            opt.UseSqlServer(configuration.GetConnectionString(""));
+            opt.UseSqlServer(configuration.GetConnectionString("SqlServer"));
         });
 
         services.AddIdentityCore<ApplicationUser>().AddEntityFrameworkStores<ApplicationContext>();
